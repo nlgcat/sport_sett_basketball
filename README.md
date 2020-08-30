@@ -57,3 +57,7 @@ Some functions in Ruby such as sort_by are not deterministic beyond their given 
 ## This is a work in progress
 This is code from an academic research project, trying to get us closer to a sensible data solution in this domain.  It is not finished, it is not a commercial product.  I am happy to answer questions if you are doing research, but please have reasonable expectations.
 
+## UML DIagram
+![UNL Diagram](https://raw.githubusercontent.com/nlgcat/sport_sett_basketball/master/class_diagram.png)
+
+
