@@ -60,4 +60,4 @@ config/credentials.yml.enc
 # Sublime
 *sublime*
 
-app/models/template/*
+app/models/template/*.rb
