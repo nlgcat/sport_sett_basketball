@@ -57,3 +57,7 @@ config/credentials.yml.enc
 # ONMT generated files
 /onmt*/*
 
+# Sublime
+*sublime*
+
+app/models/template/*

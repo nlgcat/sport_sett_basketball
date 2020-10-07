@@ -45,6 +45,9 @@ module Sett
     # Don't generate system test files.
     config.generators.system_tests = nil
 
+    # Add relational first as other things such as the NLG template depend on it
+    config.autoload_paths += Dir[ Rails.root.join('app', 'models', 'relational/') ]
+    config.autoload_paths += Dir[ Rails.root.join('app', 'models', 'template/') ]
     config.autoload_paths += Dir[ Rails.root.join('app', 'models', '**/') ]
   end
 end

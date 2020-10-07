@@ -71,12 +71,16 @@ class TeamInGame < Sequel::Model
     game.team_in_games.reject{|tig| tig == self }.first
   end
 
-  def previous_tigs
-    team_in_season.team_in_games.select{|tig| tig.game_number <= game_number }.reverse
+  def previous_tigs after_game=true
+    if after_game
+      team_in_season.team_in_games.select{|tig| tig.game_number <= game_number }.reverse
+    else
+      team_in_season.team_in_games.select{|tig| tig.game_number < game_number }.reverse
+    end
   end
 
   # Record after the game
-  def record_h
+  def record_h after_game=true
     pre_tigs = previous_tigs
     last_result = pre_tigs.size > 0 ? pre_tigs.first.winner : nil
     streak = 0

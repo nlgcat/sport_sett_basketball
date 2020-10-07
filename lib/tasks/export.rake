@@ -82,9 +82,9 @@ namespace :export do
 
         # Create the original RW partitions, the decontaminated partitions, and the yearly ones.
         # See paper for the difference
-        split_h[game.season.start_year] << {record: rebuffel, text: "#{text}"}
-        split_h[contam_split]           << {record: rebuffel, text: "#{text}"}
-        split_h[decontam_split]         << {record: rebuffel, text: "#{text}"}
+        split_h[game.season.start_year] << {data: rebuffel, text: "#{text}"}
+        split_h[contam_split]           << {data: rebuffel, text: "#{text}"}
+        split_h[decontam_split]         << {data: rebuffel, text: "#{text}"}
 
         puts "#{i}/#{Game.count}" if i % 20 == 0
       end
