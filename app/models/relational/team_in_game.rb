@@ -175,10 +175,6 @@ class TeamInGame < Sequel::Model
     arr
   end
 
-  def name
-    team.name
-  end
-
   def team
     team_in_season.team
   end

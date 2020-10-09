@@ -17,6 +17,10 @@ class Place < Sequel::Model
     arr
   end
 
+  def all_parents
+    [self.name] + parent.all_parents
+  end
+
   def onmt_h
     h = PlaceType.map{ |pt| [pt.name.upcase, 'N/A'] }.to_h
     current_place = self
