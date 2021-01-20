@@ -16,6 +16,8 @@ development:
 	port: 5432 # Optional
 
 ```
+ATTENTION!
+The original SQL file contained a but where the team_in_games.winner column was often wrong.  This was a convenience column, the scores appear to all be correct.  The file has now been updated, using the score fields to derive then correct the winner column.
 
 Then navigate to root directory of repo, download database archive file, and ensure you have the correct ruby environment set (if using something like RVM).  Large files can be found in [Google Drive](https://drive.google.com/drive/folders/11MG7uVDi5tB8By9WT_OqqqZ1NbiEaS3Y?usp=sharing).
 ```
