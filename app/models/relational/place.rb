@@ -18,7 +18,7 @@ class Place < Sequel::Model
   end
 
   def all_parents
-    [self.name] + parent.all_parents
+    Set[self.name] + (parent ? parent.all_parents : Set[])
   end
 
   def onmt_h

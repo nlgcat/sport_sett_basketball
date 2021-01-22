@@ -124,4 +124,8 @@ class PersonInTeamInGame < Sequel::Model
   def team_place_name
     team_in_game.team_place_name
   end
+
+  def team_fule_name
+    team_in_game.team_place_name
+  end
 end

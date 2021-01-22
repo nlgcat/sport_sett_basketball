@@ -18,7 +18,14 @@ class Game < Sequel::Model
   end
 
   def basketball_reference_url
-    "https://www.basketball-reference.com/boxscores/#{date_str}0#{team_codes[:home]}.html"
+    year_format = '%04d'
+    year  = format(year_format, season.start_year + month_name.year_offset)
+    month = format('%02d', month_name.calander_month_int)
+    day   = format('%02d', day_of_month)
+
+    code = TeamName.rotowire_to_bref_code(team_codes[:home])
+
+    str = "https://www.basketball-reference.com/boxscores/#{year}#{month}#{day}0#{code}.html"
   end
 
   def self.date_from_segs season, month, day_i
@@ -264,11 +271,18 @@ class Game < Sequel::Model
     }
   end
 
-  def date_str delimiter='', year_format='%04d'
-    year  = format(year_format, season.start_year + month_name.year_offset)
+  def rw_date_str()
+    year  = format('%02d', (season.start_year + month_name.year_offset).to_s.last(2))
     month = format('%02d', month_name.calander_month_int)
     day   = format('%02d', day_of_month)
-    "#{year}#{delimiter}#{month}#{delimiter}#{day}"
+    "#{month}_#{day}_#{year}"
+  end
+
+  def date_str delimiter='', year_format='%04d', rotowire_format=false
+    year  = format(year_format, (season.start_year + month_name.year_offset))
+    month = format('%02d', month_name.calander_month_int)
+    day   = format('%02d', day_of_month)
+    "#{month}#{delimiter}#{day}#{delimiter}#{year}"
   end
 
   def teams_in_game

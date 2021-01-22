@@ -19,10 +19,13 @@ class RebuffelOpenNMTRecord
 
         pitig_h = pitig.statistics_h
 
-        %w(MIN PTS FGM FGA FG_PCT FG3M FG3A FG3_PCT FTM FTA FT_PCT OREB DREB REB AST TO STL BLK PF).each do |code|
+        %w(PTS FGM FGA FG_PCT FG3M FG3A FG3_PCT FTM FTA FT_PCT OREB DREB REB AST TO STL BLK PF).each do |code|
           stat = pitig_h.has_key?(code) ? pitig_h[code] : (code =~ /_PCT/ ? 'N/A' : '0')
           entity << [stat, code]
         end
+
+        mins = pitig_h.has_key?('SEC') ? (pitig_h['SEC'].to_f/60).round : 0
+        entity << [mins, 'MIN']
 
         entity << [pitig.first_name,  'FIRST_NAME']
         entity << [pitig.last_name, 'LAST_NAME']

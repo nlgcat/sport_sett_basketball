@@ -9,6 +9,28 @@ namespace :export do
     puts Game[args[:id]].basketball_reference_url
   end
 
+  task :test_accuracy_data, [:id] => [:environment] do |task, args|
+    Game.each do |game|
+      tigs = game.teams_in_game
+      team_codes = game.team_codes
+      home_code = TeamName.rotowire_to_bref_code(team_codes[:home])
+      visiting_code = TeamName.rotowire_to_bref_code(team_codes[:visiting])
+      start_year = game.season.start_year
+      d = game.rw_date_str()
+      arr = [
+        "#{d}",
+        "#{tigs[:home].team_name}",
+        "#{tigs[:visiting].team_name}",
+        "#{game.basketball_reference_url}",
+        "#{home_code}",
+        "#{visiting_code}",
+        "https://www.basketball-reference.com/teams/#{home_code}/#{start_year+1}_games.html",
+        "https://www.basketball-reference.com/teams/#{visiting_code}/#{start_year+1}_games.html",
+      ]
+      print(arr.join(','), "\n")
+    end
+  end
+
   def write_data_file partition, arr, h_key, prefix='_D0', folder='exported_files', extension='txt'
     File.open(Rails.root.join(folder, "#{prefix}#{partition}_#{h_key}.#{extension}"), "w") do |file|
       file.write arr.map{|h| "#{h[h_key]}\n" }.join
@@ -16,7 +38,8 @@ namespace :export do
   end
 
   # Output files in the ONMT format used by Clement Rebuffel, using original Rotowire partitions
-  task :rebuffel, [:limit] => [:environment] do |task, args|
+  task :rebuffel, [:mode, :limit] => [:environment] do |task, args|
+    args.with_defaults(mode: 'EXTENDED')
     args.with_defaults(limit: 'ALL')
 
     split_names = []
@@ -64,10 +87,14 @@ namespace :export do
         end
       end
 
+      record_class = args[:mode] == 'EXTENDED' ? SettOpenNMTRecord : RebuffelOpenNMTRecord
+
       rwes.each do |rwe|
         contam_split = "contam_#{rwe.dataset_split.name}"
         text = rwe.summary
-        rebuffel = RebuffelOpenNMTRecord.new(game)
+        rebuffel = record_class.new(game)
+        # rebuffel = SettOpenNMTRecord.new(game)
+        # rebuffel = RebuffelOpenNMTRecord.new(game)
         rebuffel.values.each do |v|
           text.gsub!(v.gsub('_',' '),v) if v =~ /_/
         end
@@ -90,9 +117,11 @@ namespace :export do
       end
     end
 
+    dataset_prefix = args[:mode] == 'EXTENDED' ? 'D2' : 'D1'
+
     split_h.each do |partition, arr|
       [:data, :text].each do |h_key|
-        write_data_file(partition, arr, h_key, 'D1_', 'exported_files', 'txt')
+        write_data_file(partition, arr, h_key, "#{dataset_prefix}_", 'exported_files', 'txt')
       end
     end
   end
