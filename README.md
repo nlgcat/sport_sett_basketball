@@ -34,8 +34,8 @@ rake export:rebuffel
 This will place several files in the **./exported_files** directory.  In order to create the partitions from these files as per our paper you need to combine the yearly files.  The yearly files contain data for just one season.
 ```
 cd ./exported_files
-cat D1_2015_data.txt D1_2015_data.txt D1_2015_data.txt > D1_training_data.txt
-cat D1_2015_text.txt D1_2015_text.txt D1_2015_text.txt > D1_training_text.txt
+cat D1_2014_data.txt D1_2015_data.txt D1_2016_data.txt > D1_training_data.txt
+cat D1_2014_text.txt D1_2015_text.txt D1_2016_text.txt > D1_training_text.txt
 cp D1_2017_data.txt D1_valid_data.txt
 cp D1_2017_text.txt D1_valid_text.txt
 cp D1_2018_data.txt D1_test_data.txt
