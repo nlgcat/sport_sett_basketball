@@ -41,6 +41,13 @@ cp D1_2017_text.txt D1_valid_text.txt
 cp D1_2018_data.txt D1_test_data.txt
 cp D1_2018_text.txt D1_test_text.txt
 ```
+
+or run
+
+```
+sh combine.sh
+```
+
 You can of course combine these in other ways.  This is just the partition scheme we used in our paper.
 
 ## Dimensions
