@@ -29,18 +29,25 @@ psql -U postgres -d sport_sett_development < db_after_statistics_2018.sql
 You can now generate output files in the format required for the [system of Rebuffel et al.](https://github.com/KaijuML/data-to-text-hierarchical).  This takes about 1 hour to run.  The result of the below command has been uploaded to [Google Drive](https://drive.google.com/drive/folders/11MG7uVDi5tB8By9WT_OqqqZ1NbiEaS3Y?usp=sharing) if you just want the OpenNMT training data without changing anything.
 
 ```
-rake rebuffel:export
+rake export:rebuffel
 ```
 This will place several files in the **./exported_files** directory.  In order to create the partitions from these files as per our paper you need to combine the yearly files.  The yearly files contain data for just one season.
 ```
 cd ./exported_files
-cat D1_2015_data.txt D1_2015_data.txt D1_2015_data.txt > D1_training_data.txt
-cat D1_2015_text.txt D1_2015_text.txt D1_2015_text.txt > D1_training_text.txt
+cat D1_2014_data.txt D1_2015_data.txt D1_2016_data.txt > D1_training_data.txt
+cat D1_2014_text.txt D1_2015_text.txt D1_2016_text.txt > D1_training_text.txt
 cp D1_2017_data.txt D1_valid_data.txt
 cp D1_2017_text.txt D1_valid_text.txt
 cp D1_2018_data.txt D1_test_data.txt
 cp D1_2018_text.txt D1_test_text.txt
 ```
+
+or run
+
+```
+sh combine.sh
+```
+
 You can of course combine these in other ways.  This is just the partition scheme we used in our paper.
 
 ## Dimensions
