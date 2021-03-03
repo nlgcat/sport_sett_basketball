@@ -1,6 +1,16 @@
 # SportSett:Basketball
 
-This resource is designed to allow for research into Natural Language Generation.  In particular, with neural data-to-text approaches although it is not limited to these.  This page will be updated with more detail, as soon as I have time and am able to post examples of other work I am doing with this.  For the moment, see our [IntelLanG2020](https://intellang.github.io/papers/) paper [SportSett:Basketball - A robust and maintainabledataset for Natural Language Generation](https://intellang.github.io/papers/5-IntelLanG_2020_paper_5.pdf).  
+This resource is designed to allow for research into Natural Language Generation.  In particular, with neural data-to-text approaches although it is not limited to these.  This page will be updated with more detail, as soon as I have time and am able to post examples of other work I am doing with this.  For the moment, see our [IntelLanG2020](https://intellang.github.io/papers/) paper [SportSett:Basketball - A robust and maintainabledataset for Natural Language Generation](https://intellang.github.io/papers/5-IntelLanG_2020_paper_5.pdf).
+
+# Denormalized Tables
+To make things easier for people, I have uploaded on [Google Drive](https://drive.google.com/file/d/1CN74cxLrlBQpcStJIF1GQJO0TcTE6y2T/view?usp=sharing) a SQL script which will add some denormalized tables created from the core tables.  This provides things like:
+
+* Per player/team on game/period statistics, with each player/time-period on one row.
+* The same, except for some name information about each row.
+
+On the statistics tables, each stat has a count, then also a "_double" column, which is one if it is "double digits", zero otherwise.  There are also columns at the end for whether the player had a "double-double" or "triple-double" etc.  These columns are included for teams, and per-period data as well, even though it does not always make sense to use it that way.
+
+These have not been thoroughly tested yet, and I will at some point release the SQL scripts I used to make these tables.  I know the underlying table structure can seem daunting/obtuse.  It has been designed to allow for multiple sports and leagues whilst maintaining a high level of normalization.  It is like this, because I find it easier to work with, although I acknowledge that not everyone does.  For NLG research I am looking at simpler ways this data can be made available, and these 8 new tables are a first step in that direction.
 
 ## Quick Start
 You will need a working [PostgreSQL](https://www.postgresql.org/) installation, as well as a working Ruby environment if you want to use the ORM.  I suggest using [RVM](https://rvm.io/), you will also need [Bundler](https://bundler.io/).  The ORM are written in [Ruby Sequel](https://github.com/jeremyevans/sequel) rather than ActiveRecord.  Whilst this is all in a Rails app, there is no front-end implemented, it is just a convenient way for me to create scripts using rake tasks.  Note that this resource is not meant to be efficient.  If you require high data throughput for some reason, you can use the raw SQL.  The Ruby code is meant to provide a simple way to write scripts to export data, this might take an hour or two to run but it is simple to code and the training of models takes way longer than that anyway, so I find it to be acceptable.
