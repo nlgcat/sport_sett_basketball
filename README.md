@@ -11,7 +11,7 @@ You will need a working [PostgreSQL](https://www.postgresql.org/) installation t
 
 There is no need to clone the repository to use the database, simply download the following files to a directory of your choosing.
 
-The examples below use ```~/dirname```, and assume that you have a used ```postgres``` with password ```postgrespassword```, and that the database name is ```sport_sett_development```.  These can all be set to different values if you wish.
+The examples below use ```~/dirname```, and assume that you have a userGEMv2: Multilingual NLG Benchmarking in a Single Line of Code ```postgres``` with password ```postgrespassword```, and that the database name is ```sport_sett_development```.  These can all be set to different values if you wish.
 
 Download the files and place them in the directory you chose.
 1. [Main Database SQL Script](https://drive.google.com/file/d/1m1ywZbMIsmOSV-2HUk7jzQ7rNIUeJOLC/view?usp=share_link)
