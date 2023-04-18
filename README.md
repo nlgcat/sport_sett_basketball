@@ -49,7 +49,7 @@ Should output:
 ```
 
 # Denormalized Tables
-To make things easier for people, I have uploaded on [Google Drive](https://drive.google.com/file/d/1CN74cxLrlBQpcStJIF1GQJO0TcTE6y2T/view?usp=sharing) a SQL script which will add some denormalized tables created from the core tables.  This provides things like:
+To make things easier for people, I have uploaded on [Google Drive](https://drive.google.com/file/d/1CN74cxLrlBQpcStJIF1GQJO0TcTE6y2T/view?usp=sharing) a SQL script which will add some denormalized tables created from the core tables (this is what cache_sport_sett.sql is in the above instructions).  This provides things like:
 
 * Per player/team on game/period statistics, with each player/time-period on one row.
 * The same, except for some name information about each row.
