@@ -2,76 +2,73 @@
 
 This resource is designed to allow for research into Natural Language Generation.  In particular, with neural data-to-text approaches although it is not limited to these.  This page will be updated with more detail, as soon as I have time and am able to post examples of other work I am doing with this.  For the moment, see our [IntelLanG2020](https://intellang.github.io/papers/) paper [SportSett:Basketball - A robust and maintainabledataset for Natural Language Generation](https://intellang.github.io/papers/5-IntelLanG_2020_paper_5.pdf).
 
+You may also be interested in the simpler version of [SportSett](https://gem-benchmark.com/data_cards/sportsett_basketball) that is in [GEM](https://gem-benchmark.com/).  It is in JSON format rarther than being a database in Postgres, although it is only a subset of the data and is not suitable for complex queries.
+
+## Quick Start
+You will need a working [PostgreSQL](https://www.postgresql.org/) installation to setup the database.  Whilst this repository includes Ruby code for using the ORM to access the database, this will not be maintained or supported.  It was used to built the dataset and for creating JSON files for the paper, it is included here in case it is useful.
+
+**Documentation and tutorial for using the dataset will be in SQL only** (along with some python examples for how to connect to the database).
+
+There is no need to clone the repository to use the database, simply download the following files to a directory of your choosing.
+
+The examples below use ```~/dirname```, and assume that you have a used ```postgres``` with password ```postgrespassword```, and that the database name is ```sport_sett_development```.  These can all be set to different values if you wish.
+
+Download the files and place them in the directory you chose.
+1. [Main Database SQL Script](https://drive.google.com/file/d/1m1ywZbMIsmOSV-2HUk7jzQ7rNIUeJOLC/view?usp=share_link)
+2. [Convenience Cache Tables](https://drive.google.com/file/d/1CN74cxLrlBQpcStJIF1GQJO0TcTE6y2T/view?usp=share_link)
+
+```
+  cd ~/dirname
+  
+  # Extract the archives to get the SQL scripts that create the database
+  tar -xvjpf db_after_statistics_2018_August_2020.sql.tar.bz2
+  tar -xvjpf tar -xvjpf cache_sport_sett.sql.tar.bz2
+  
+  # Create the database in Postgres
+  psql -U postgres -c 'create database sport_sett_development;'
+  
+  # Run the commands in the SQL script to create and populate the database tables
+  psql -U postgres -d sport_sett_development < db_after_statistics_2018.sql
+  
+  # Run the commands to create the cache table (this has to be done after the above step)
+  psql -U postgres -d sport_sett_development < cache_sport_sett.sql
+```
+
+Then, to test the installation is working:
+```
+  psql -U postgres -d sport_sett_development -c 'SELECT * FROM conferences;
+```
+
+Should output:
+```
+ id | league_id |        name        |         created_at         |         updated_at         
+----+-----------+--------------------+----------------------------+----------------------------
+  1 |         1 | Eastern Conference | 2020-04-23 16:19:32.906563 | 2020-04-23 16:19:32.906563
+  2 |         1 | Western Conference | 2020-04-23 16:19:32.911953 | 2020-04-23 16:19:32.911953
+(2 rows)
+```
+
 # Denormalized Tables
 To make things easier for people, I have uploaded on [Google Drive](https://drive.google.com/file/d/1CN74cxLrlBQpcStJIF1GQJO0TcTE6y2T/view?usp=sharing) a SQL script which will add some denormalized tables created from the core tables.  This provides things like:
 
 * Per player/team on game/period statistics, with each player/time-period on one row.
 * The same, except for some name information about each row.
 
+All such tables have names that are prefixed with cache_
+
 On the statistics tables, each stat has a count, then also a "_double" column, which is one if it is "double digits", zero otherwise.  There are also columns at the end for whether the player had a "double-double" or "triple-double" etc.  These columns are included for teams, and per-period data as well, even though it does not always make sense to use it that way.
 
 These have not been thoroughly tested yet, and I will at some point release the SQL scripts I used to make these tables.  I know the underlying table structure can seem daunting/obtuse.  It has been designed to allow for multiple sports and leagues whilst maintaining a high level of normalization.  It is like this, because I find it easier to work with, although I acknowledge that not everyone does.  For NLG research I am looking at simpler ways this data can be made available, and these 8 new tables are a first step in that direction.  You should be bale to just run the sql file with the psql command and write these tables atop your existing database.
 
-## Quick Start
-You will need a working [PostgreSQL](https://www.postgresql.org/) installation, as well as a working Ruby environment if you want to use the ORM.  I suggest using [RVM](https://rvm.io/), you will also need [Bundler](https://bundler.io/).  The ORM are written in [Ruby Sequel](https://github.com/jeremyevans/sequel) rather than ActiveRecord.  Whilst this is all in a Rails app, there is no front-end implemented, it is just a convenient way for me to create scripts using rake tasks.  Note that this resource is not meant to be efficient.  If you require high data throughput for some reason, you can use the raw SQL.  The Ruby code is meant to provide a simple way to write scripts to export data, this might take an hour or two to run but it is simple to code and the training of models takes way longer than that anyway, so I find it to be acceptable.
 
-You will need to set the password etc in config/database.yml
-```
-development:
-	adapter: postgresql
-	database: sport_sett_development
-	user: postgres # Also accept 'username' as key, if both are present 'username' is used
-	password: postgrespassword
-	host: 127.0.0.1 # Optional
-	port: 5432 # Optional
-
-```
-ATTENTION!
-The original SQL file contained a but where the team_in_games.winner column was often wrong.  This was a convenience column, the scores appear to all be correct.  The file has now been updated, using the score fields to derive then correct the winner column.
-
-Then navigate to root directory of repo, download database archive file, and ensure you have the correct ruby environment set (if using something like RVM).  Large files can be found in [Google Drive](https://drive.google.com/file/d/1NUEHzNmwlG-TQB6dAxSiTUQQ7z6vbkNL/view?usp=sharing).
-```
-bundle install
-tar -xvjpf db_after_statistics_2018.sql.tar.bz2
-psql -U postgres -d sport_sett_development < db_after_statistics_2018.sql
-```
-
-You can now generate output files in the format required for the [system of Rebuffel et al.](https://github.com/KaijuML/data-to-text-hierarchical).  This takes about 1 hour to run.  The result of the below command has been uploaded to [Google Drive](https://drive.google.com/drive/folders/11MG7uVDi5tB8By9WT_OqqqZ1NbiEaS3Y?usp=sharing) if you just want the OpenNMT training data without changing anything.
-
-```
-rake export:rebuffel
-```
-This will place several files in the **./exported_files** directory.  In order to create the partitions from these files as per our paper you need to combine the yearly files.  The yearly files contain data for just one season.
-```
-cd ./exported_files
-cat D1_2014_data.txt D1_2015_data.txt D1_2016_data.txt > D1_training_data.txt
-cat D1_2014_text.txt D1_2015_text.txt D1_2016_text.txt > D1_training_text.txt
-cp D1_2017_data.txt D1_valid_data.txt
-cp D1_2017_text.txt D1_valid_text.txt
-cp D1_2018_data.txt D1_test_data.txt
-cp D1_2018_text.txt D1_test_text.txt
-```
-
-or run
-
-```
-sh combine.sh
-```
-
-You can of course combine these in other ways.  This is just the partition scheme we used in our paper.
-
-## Dimensions
-Please see **app/models/rebuffel_open_nmt_record.rb** for code which creates this data.  If you wanted to change the data for each input sample, this is where you would do it, either by editing this file or creating your own similar class which is used in the rake script.
-
-Notice how the class names follow the dimensions highlighted in our paper.  The UML diagram shows these relationships.
-
+## Data discrepancy issues
 WARNING:  There are some issues with the play-by-play statistics.  Sometimes, they do not line up with what is reported in the box score.  I am working on scripts to automatically resolve these, although early investigation suggests there is only about 1 mistake every other game.  A mistake is commonly just one basket being attributed to the wrong player.  You can use the play-by-play, there is a lot of data there, but there are discrepancies.  Given this is such a large dataset, with original data entry likely by humans, it will not be 100% perfect.  My current plan for this is to take the game data, game period data, and play-by-play, then resolve discrepancies automatically where 2/3 of the sources agree on a correct answer, and the error can be resolved a net-zero effect (same team totals, points etc).
 
-## Playoff / Preseason Games
-Whilst some of these games are in the original Rotowire dataset, they are not yet included here.  The database is designed in such a way that they can be added later.  There are several reasons for not including them yet.  Firstly, it takes time to import this stuff.  Secondly, just doing regular season games makes the machine learning problem simpler (and it is still very, very difficult).  Finally, preseason games are played in all kinds of places, even against teams from different leagues.
+## Updated main databsase file
+The original SQL file contained a but where the team_in_games.winner column was often wrong.  This was a convenience column, the scores appear to all be correct.  The file has now been updated, using the score fields to derive then correct the winner column.  The above instructions link to the correct, updated files.
 
-## A Note on Generated Files
-Some functions in Ruby such as sort_by are not deterministic beyond their given arguments.  This means that items which are of equal value when sorted are not always presented in the same order (just together).  The code has also been changed slightly to make it simpler (it used to be several different functions doing similar things).  I only mention this here so you know that the dataset generated is not the exact one used in the paper.  This is no bad thing, running on the exact same dataset over and over again is a bad idea.
+## Playoff / Preseason Games
+There are also some tables which are empty, for example any tables relating to playoff or preseason games.  Whilst some of these games are in the original Rotowire dataset, they are not yet included here.  The database is designed in such a way that they can be added later.  There are several reasons for not including them yet.  Firstly, it takes time to import this stuff.  Secondly, just doing regular season games makes the machine learning problem simpler (and it is still very, very difficult).  Finally, preseason games are played in all kinds of places, even against teams from different leagues.
 
 ## This is a work in progress
 This is code from an academic research project, trying to get us closer to a sensible data solution in this domain.  It is not finished, it is not a commercial product.  I am happy to answer questions if you are doing research, but please have reasonable expectations.
@@ -79,5 +76,3 @@ This is code from an academic research project, trying to get us closer to a sen
 ## UML DIagram
 Some attributes are missing for this and it needs a general update and tidy, but it is mostly right.  You can find all attributes by looking at the SQL tables.  Rails Sequel naming conventions have been followed.
 ![UML Diagram](https://raw.githubusercontent.com/nlgcat/sport_sett_basketball/master/class_diagram.png)
-
-
