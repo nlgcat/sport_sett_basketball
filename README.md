@@ -35,7 +35,7 @@ Then run the below commands:
   psql -U postgres -d sport_sett_development < cache_sport_sett.sql
 ```
 
-Note that the ```db_after_statistics_2018.sql``` file in particular will take some time to run (some database tables contain millions of rows and indexes are created by the script for faster queries in the future).  On an i7 laptop it takes about 4 minutes.
+Note that the ```db_after_statistics_2018.sql``` file in particular will take some time to run (some database tables contain millions of rows and indexes are created by the script for faster queries in the future).  On an i7 laptop it takes a few minutes to process each .sql file.
 
 Then, to test the installation is working:
 ```
