@@ -17,7 +17,7 @@ Download the files and place them in the directory you chose.
 1. [Main Database SQL Script](https://drive.google.com/file/d/1m1ywZbMIsmOSV-2HUk7jzQ7rNIUeJOLC/view?usp=share_link)
 2. [Convenience Cache Tables](https://drive.google.com/file/d/1CN74cxLrlBQpcStJIF1GQJO0TcTE6y2T/view?usp=share_link)
 
-Then run the commands:
+Then run the below commands:
 ```
   cd ~/dirname
   
@@ -35,9 +35,11 @@ Then run the commands:
   psql -U postgres -d sport_sett_development < cache_sport_sett.sql
 ```
 
+Note that the ```db_after_statistics_2018.sql``` file in particular will take some time to run (some database tables contain millions of rows and indexes are created by the script for faster queries in the future).  On an i7 laptop it takes about 4 minutes.
+
 Then, to test the installation is working:
 ```
-  psql -U postgres -d sport_sett_development -c 'SELECT * FROM conferences;
+  psql -U postgres -d sport_sett_development -c 'SELECT * FROM conferences;'
 ```
 
 Should output:
