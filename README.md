@@ -53,7 +53,7 @@ Should output:
 A full tutorial will be added shortly explaining how to query the database.  One convention is that all tables have an ```id``` (auto number) primary key column and any column that is suffixed with ```_id``` will be a foreign key for that table.  For example, if a table incudes the column ```conference_id``` then it refers to the ```id``` column in the ```conferences``` table.  Notice that the table names are inflected such that they are plural, whilst the keys are singular (this is a Ruby [Sequel](https://sequel.jeremyevans.net/) convention, once you get used to it you will quickly understand which foreign keys are in a table just by looking at the column names).
 
 # Denormalized (cache) Tables
-To make things easier for people, I have uploaded on [Google Drive](https://drive.google.com/file/d/1CN74cxLrlBQpcStJIF1GQJO0TcTE6y2T/view?usp=sharing) a SQL script which will add some denormalized tables created from the core tables (this is what cache_sport_sett.sql is in the above instructions).  This provides things like:
+To make things easier for people, I have uploaded a SQL script which will add some denormalized tables created from the core tables (this is what cache_sport_sett.sql is in the above instructions).  This provides things like:
 
 * Per player/team on game/period statistics, with each player/time-period on one row.
 * The same, except for some name information about each row.
