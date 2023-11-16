@@ -4,6 +4,11 @@ This resource is designed to allow for research into Natural Language Generation
 
 You may also be interested in the simpler version of [SportSett](https://gem-benchmark.com/data_cards/sportsett_basketball) that is in [GEM](https://gem-benchmark.com/).  It is in JSON format rarther than being a database in Postgres, although it is only a subset of the data and is not suitable for complex queries.
 
+## Update 16/11/2023
+The database is designed to be heavily normalized in order to support sports other than basketball. However, this has meant that it can be difficult to query, something which we have recently fixed by replacing the cache_ tables with Postgres [materialized views](https://www.postgresql.org/docs/current/rules-materializedviews.html) that more closely resemble the box and line scores. These will be properly released shortly (as soon as I have the time to document them).
+
+If you want to access the materialized views version of SportSett now, then you can do so [here](https://drive.google.com/file/d/1aeeWgWJn1GbZkwad7KA4VPVp4MW2pj3O/view) . Please note that this is a replacement for all SQL files on the README here. The underlying tables are the same, except that the timestamps have been removed to reduce bloat (they are an artefact of the API used to create the database). The cache_ tables are no longer present, and instead you will see the new views with the materialized_ prefix.
+
 ## Quick Start
 You will need a working [PostgreSQL](https://www.postgresql.org/) installation to setup the database.  Whilst this repository includes Ruby code for using the ORM to access the database, this will not be maintained or supported.  It was used to built the dataset and for creating JSON files for the paper, it is included here in case it is useful.
 
